@@ -69,6 +69,8 @@ class BoardContainer extends Component {
             return actions.removeCard({laneId: event.laneId, cardId: event.cardId})
           case 'REFRESH_BOARD':
             return actions.loadBoard(event.data)
+          case 'MOVE_LANE':
+              return actions.moveLane(event.data)
           case 'MOVE_CARD':
             return actions.moveCardAcrossLanes({
               fromLaneId: event.fromLaneId,
