@@ -93,15 +93,21 @@ const LaneHelper = {
 
   moveCardAcrossLanes: (state, {fromLaneId, toLaneId, cardId, index}) => {
     let cardToMove = null
+    let hasBeenMoved = false;
     const interimLanes = state.lanes.map(lane => {
       if (lane.id === fromLaneId) {
         cardToMove = lane.cards.find(card => card.id === cardId)
-        const newCards = lane.cards.filter(card => card.id !== cardId)
-        return update(lane, {cards: {$set: newCards}})
-      } else {
-        return lane
+        if (cardToMove) {
+          const newCards = lane.cards.filter(card => card.id !== cardId)
+          return update(lane, {cards: {$set: newCards}})
+        } else {
+          hasBeenMoved = true;
+        }
+
       }
+       return lane
     })
+    if (hasBeenMoved) return state;
     const updatedState = update(state, {lanes: {$set: interimLanes}})
     return LaneHelper.appendCardToLane(updatedState, {laneId: toLaneId, card: cardToMove, index: index})
   },
